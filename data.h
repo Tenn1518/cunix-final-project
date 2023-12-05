@@ -1,3 +1,6 @@
+#ifndef DATA_H_
+#define DATA_H_
+
 #include <string.h>
 #include <stdlib.h>
 
@@ -17,3 +20,5 @@ typedef struct student
     Course* courses;
     char* full_name;
 } Student;
+
+#endif // DATA_H_
