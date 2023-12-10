@@ -12,8 +12,10 @@
 
 int select_item(char *choices[], int size);
 void register_teacher(Teacher list[], int index);
-void login_as_teacher(Teacher list[], int index);
-void login_as_student();
+void login_as_teacher(Teacher list[], Student students[], int index, int sindex);
+void login_as_student(Student students[], int students_index);
+
+
 
 int main(void)
 {
@@ -24,7 +26,7 @@ int main(void)
     bool exit = false;
 
     srand(time(NULL));
-    
+
     /* Main menu list of available options. */
     char *strs[] = {
 	"Exit",
@@ -50,11 +52,11 @@ int main(void)
 	    break;
 	case 2:
 	    /* TODO */
-	    login_as_student();
+	    login_as_student(students, students_index);
 	    break;
 	case 3:
 	    /* TODO */
-	    login_as_teacher(teachers, teachers_index);
+	    login_as_teacher(teachers,students, teachers_index, students_index);
 	    break;
 	}
     }
@@ -90,7 +92,7 @@ int select_item(char *menu_items[], int size)
     return input;
 }
 
-/* New user registeres their full name. */
+/* New user registers their full name. */
 void register_teacher(Teacher list[], int index)
 {
     char name[STR_LENGTH];
@@ -98,30 +100,32 @@ void register_teacher(Teacher list[], int index)
 
     printf("Enter full name of the teacher [Max length: %d]: ", MAX);
 
-    /* Use fgets so user can input space-separated full name. */
+    /* Use fgets so the user can input space-separated full name. */
     fgets(name, STR_LENGTH, stdin);
 
-    /* Strip newline from end of inputted name. */
+    /* Strip newline from the end of the inputted name. */
     for (int i = 0; i < STR_LENGTH; i++)
     {
-	if (name[i] == '\n')
-	{
-	    name[i] = '\0';
-	}
+        if (name[i] == '\n')
+        {
+            name[i] = '\0';
+        }
     }
+
+    //Dynamically allocate memory space for the teacher name.
+    new_t.full_name = malloc(strlen(name) + 1);
+    strcpy(new_t.full_name, name);
 
     /* Print confirmation of registration. */
     printf("New teacher %s with id %d\n"
-           "Please write down the id %d to login in the future.\n\n",
-           name, index, index);
+           "Please write down the id %d to log in in the future.\n\n",
+           new_t.full_name, index, index);
 
-    new_t.full_name = name;
-    
     list[index] = new_t;
 }
 
 /* User will choose their teacher id. TODO */
-void login_as_teacher(Teacher list[], int index)
+void login_as_teacher(Teacher list[], Student students[], int index, int sindex)
 {
     int id = -1;
     Teacher *logged_in;
@@ -132,7 +136,7 @@ void login_as_teacher(Teacher list[], int index)
 	printf("Please register a teacher first.\n\n");
 	return;
     }
-    
+
     while (!valid_id)
     {
 	printf("Enter teacher user ID: ");
@@ -151,34 +155,84 @@ void login_as_teacher(Teacher list[], int index)
     logged_in = &list[id];
     char* name = logged_in->full_name;
     printf("Welcome, %s.\n", name);
+    teacher_menu(list,students, sindex);
 }
 
 /* TODO: UNFINISHED */
-void teacher_menu(Teacher teacher)
+void teacher_menu(Teacher teacher, Student students[], int sindex)
 {
+    bool exit = false;
     int choice;
     char *menu_items[] = {
         "Exit",
-	"Add course",
+        "Add course",
         "View courses",
         "Create student",
         "Edit student grades",
         "View student grades"
     };
 
-    choice = select_item(menu_items, 5);
+    while(!exit)
+    {
+
+
+    choice = select_item(menu_items, 6);
+
 
     switch (choice)
     {
     case 0:
-	return;
-	break;
+        exit = true;
+        return;
+        break;
     case 1:
-	/* TODO */
+        /* TODO - Add courses */
+        break;
+	case 2:
+        /* TODO - View courses  */
+        break;
+    case 3:
+        create_student(students, sindex);
+        sindex++;
+        break;
+    case 4:
+        edit_student_grades(students, sindex);
+        break;
+    case 5:
+        view_student_grades(students, sindex);
+    }
     }
 }
 
-void login_as_student()
+void login_as_student(Student students[], int students_index)
 {
-    
+    int id = -1;
+    Student *logged_in;
+    bool valid_id = true;
+
+    if (students_index == 0)
+    {
+        printf("No students available. Please create a student first.\n\n");
+        return;
+    }
+
+    while (!valid_id)
+    {
+        printf("Enter student user ID: ");
+        scanf("%d", &id);
+
+        if (id < 0 || id >= students_index)
+        {
+            printf("Invalid student ID.\n");
+        }
+        else
+        {
+            valid_id = true;
+        }
+    }
+
+    logged_in = &students[id];
+    char *name = logged_in->full_name;
+    printf("Welcome, %s.\n", name);
+
 }
