@@ -7,10 +7,13 @@
 #include "data.h"
 
 #define STR_LENGTH 80
-#define MAX_COURSES 5
+#define MAX_COURSES 4
+
+
+
 
 // Creates a new student and assigns courses with grades to student *UNFINISHED*
-void create_student(Student students[], int index)
+void create_student(Student students[], int sindex)
 {
     // Declare variables to grab names and grade from input
     char student_name[STR_LENGTH];
@@ -20,39 +23,78 @@ void create_student(Student students[], int index)
     printf("Enter the full name of the student: ");
     fgets(student_name, STR_LENGTH, stdin);
 
+    // Remove new line character from student name
+    // replace with terminating char
+    size_t len = strlen(student_name);
+    if (len > 0 && student_name[len - 1] == '\n')
+    {
+        student_name[len - 1] = '\0';
+    }
+
     Student new_student;
     new_student.full_name = strdup(student_name);
 
-    for(int i = 0; i < MAX_COURSES; i++)
-    {
-        printf("Enter course name: ");
-        fgets(student_course, STR_LENGTH, stdin);
-
-
-        new_student.courses[i].name = strdup(student_course);
-
-        printf("Enter course grade: ");
-        scanf(" %u", &course_grade);    // Space before identifier to consume the newline character
-        new_student.courses[i].grade = course_grade;
-
-
-    }
 
 
     // Add new student to array of students
-    students[index] = new_student;
+    students[sindex] = new_student;
 
-    printf("New student, %s with id %d\n"
-           "Student id must be given to the student.\n\n",
-           student_name, index);
+    printf("New student %s, with id %d.\nStudent id must be given to the student.\n",student_name, sindex);
 }
 
+// Edit the grades for each course assigned to the student
+// *SUBJECT TO CHANGE*
 void edit_student_grades(Student students[], int students_index)
 {
-    // TODO
+    int student_id;
+    printf("Enter the ID of the student to edit grades: ");
+    scanf("%d", &student_id);
+
+    if (student_id < 0 || student_id >= students_index)
+    {
+        printf("Invalid student ID.\n");
+    }
+
+    Student *student = &students[student_id];
+
+    // Edit grades for each course *SUBJECT TO CHANGE*
+    for (int i = 0; i <= MAX_COURSES; i++)
+    {
+        // Check if the course exists
+        if (student->courses[i].name != NULL)
+        {
+            printf("Enter new grade for %s: ", student->courses[i].name);
+            scanf("%u", &student->courses[i].grade);
+        }
+    }
+
+    printf("Grades for %s edited successfully.\n", student->full_name);
 }
 
+// Displays the grade and name for each course assigned to the student
 void view_student_grades(Student students[], int students_index)
 {
-   // TODO
+    int student_id;
+    printf("Enter the ID of the student to view grades: ");
+    scanf("%d", &student_id);
+
+    if (student_id < 0 || student_id >= students_index)
+    {
+        printf("Invalid student ID.\n");
+        return;
+    }
+
+    Student *student = &students[student_id];
+
+    printf("Grades for %s:", student->full_name);
+
+
+    for (int i = 0; i < MAX_COURSES; i++)
+    {
+        // Check if the course exists
+        if (student->courses[i].name != NULL)
+        {
+            printf("%s: %u\n", student->courses[i].name, student->courses[i].grade);
+        }
+    }
 }
