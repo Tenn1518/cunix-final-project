@@ -3,6 +3,10 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
+
+int select_item(char *choices[], int size);
+void strip_newline(char *str);
 
 typedef struct teacher
 {

@@ -10,12 +10,10 @@
 #include "data.h"
 #include "teacher.h"
 
-int select_item(char *choices[], int size);
 void register_teacher(Teacher list[], int index);
-void login_as_teacher(Teacher list[], Student students[], int index, int sindex);
+Teacher* login_as_teacher(Teacher list[], int index);
 void login_as_student(Student students[], int students_index);
-
-
+void teacher_menu(Teacher* teacher, Student students[], int *sindex);
 
 int main(void)
 {
@@ -40,6 +38,7 @@ int main(void)
     while (!exit)
     {
 	choice = select_item(strs, 4);
+	Teacher* logged_in;
 
 	switch (choice)
 	{
@@ -56,40 +55,15 @@ int main(void)
 	    break;
 	case 3:
 	    /* TODO */
-	    login_as_teacher(teachers,students, teachers_index, students_index);
+	    logged_in = login_as_teacher(teachers, teachers_index);
+	    if (logged_in != NULL)
+	    {
+		teacher_menu(logged_in, students, &students_index);
+	    }
 	    break;
 	}
     }
     return 0;
-}
-
-/* Creates menu from a list of possible choices the user can choose from as
- * strings.  Empty strings are skipped over, such as when you don't want a 0th
- * choice.  User's input is validated. */
-int select_item(char *menu_items[], int size)
-{
-    int input = -1;
-
-    /* Print each menu item */
-    for (int i = 0; i < size; i++)
-    {
-	char *item = menu_items[i];
-	if (strcmp(item, "") != 0)
-	    printf("%d) %s\n", i, menu_items[i]);
-    }
-
-    /* User chooses from items.  Validate user input */
-    while (input > size || input < 0)
-    {
-	char c;
-	printf("\nEnter choice: ");
-	scanf("%d", &input);
-	/* scanf leaves a newline in stdin, so remove it to avoid messing up
-	 * future input/fgets calls. */
-	while((c = getchar()) != '\n' && c != EOF);
-    }
-
-    return input;
 }
 
 /* New user registers their full name. */
@@ -125,7 +99,7 @@ void register_teacher(Teacher list[], int index)
 }
 
 /* User will choose their teacher id. TODO */
-void login_as_teacher(Teacher list[], Student students[], int index, int sindex)
+Teacher* login_as_teacher(Teacher list[], int index)
 {
     unsigned int id = index;
     Teacher *logged_in;
@@ -134,7 +108,7 @@ void login_as_teacher(Teacher list[], Student students[], int index, int sindex)
     if (index == 0)
     {
 	printf("Please register a teacher first.\n\n");
-	return;
+	return NULL;
     }
 
     while (!valid_id)
@@ -155,53 +129,9 @@ void login_as_teacher(Teacher list[], Student students[], int index, int sindex)
     logged_in = &list[id];
     char* name = logged_in->full_name;
     printf("Welcome, %s.\n", name);
-    teacher_menu(list,students, sindex);
-}
 
-/* TODO: UNFINISHED */
-void teacher_menu(Teacher teacher, Student students[], int sindex)
-{
-    bool exit = false;
-    int choice;
-    char *menu_items[] = {
-        "Exit",
-        "Add course",
-        "View courses",
-        "Create student",
-        "Edit student grades",
-        "View student grades"
-    };
-
-    while(!exit)
-    {
-
-
-    choice = select_item(menu_items, 6);
-
-
-    switch (choice)
-    {
-    case 0:
-        exit = true;
-        return;
-        break;
-    case 1:
-        /* TODO - Add courses */
-        break;
-	case 2:
-        /* TODO - View courses  */
-        break;
-    case 3:
-        create_student(students, sindex);
-        sindex++;
-        break;
-    case 4:
-        edit_student_grades(students, sindex);
-        break;
-    case 5:
-        view_student_grades(students, sindex);
-    }
-    }
+    return logged_in;
+    /* teacher_menu(list, students, sindex); */
 }
 
 void login_as_student(Student students[], int students_index)
@@ -235,4 +165,46 @@ void login_as_student(Student students[], int students_index)
     char *name = logged_in->full_name;
     printf("Welcome, %s.\n", name);
 
+}
+
+/* TODO: UNFINISHED */
+void teacher_menu(Teacher* teacher, Student students[], int* sindex)
+{
+    bool exit = false;
+    int choice;
+    char *menu_items[] = {
+        "Exit",
+        "Add course",
+        "View courses",
+        "Create student",
+        "Edit student grades",
+        "View student grades"
+    };
+
+    while(!exit)
+    {
+	choice = select_item(menu_items, 6);
+	switch (choice)
+	{
+	case 0:
+	    exit = true;
+	    return;
+	    break;
+	case 1:
+	    /* TODO - Add courses */
+	    break;
+	case 2:
+	    /* TODO - View courses  */
+	    break;
+	case 3:
+	    create_student(students, sindex);
+	    sindex++;
+	    break;
+	case 4:
+	    edit_student_grades(students, sindex);
+	    break;
+	case 5:
+	    view_student_grades(students, sindex);
+	}
+    }
 }

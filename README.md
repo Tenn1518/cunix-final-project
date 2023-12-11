@@ -27,3 +27,15 @@ their individual marks only.
 
 Design a clear and concise main menu to navigate between roles (teacher or
 student).
+
+## Compile
+
+```
+$ git clone https://github.com/Tenn1518/cunix-final-project.git
+
+$ cd cunix-final-project
+
+$ gcc -o main main.c data.c teacher.c
+
+$ ./main
+```
