@@ -77,7 +77,6 @@ void register_teacher(Teacher list[], int index)
     /* Strip newline from the end of the inputted name. */
     strip_newline(name);
 
-    //Dynamically allocate memory space for the teacher name.
     strcpy(new_t.full_name, name);
 
     /* Print confirmation of registration. */
@@ -127,7 +126,7 @@ void login_as_student(Student students[], int students_index)
 {
     int id = -1;
     Student *logged_in;
-    bool valid_id = true;
+    bool valid_id = false;
 
     if (students_index == 0)
     {
@@ -140,20 +139,22 @@ void login_as_student(Student students[], int students_index)
         printf("Enter student user ID: ");
         scanf("%d", &id);
 
-        if (id < 0 || id >= students_index)
+        if (id >= 0 && id < students_index)
         {
-            printf("Invalid student ID.\n");
+            valid_id = true;
         }
         else
         {
-            valid_id = true;
+            printf("Invalid student ID.\n");
+
+
+            while (getchar() != '\n');
         }
     }
 
     logged_in = &students[id];
     char *name = logged_in->full_name;
     printf("Welcome, %s.\n", name);
-
 }
 
 /* TODO: UNFINISHED */
@@ -167,12 +168,13 @@ void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *cours
         "View courses",
         "Create student",
         "Edit student grades",
-        "View student grades"
+        "View student grades",
+        "Sort student grades"
     };
 
     while(!exit)
     {
-	choice = select_item(menu_items, 6);
+	choice = select_item(menu_items, 7);
 	switch (choice)
 	{
 	case 0:
@@ -187,13 +189,16 @@ void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *cours
 	    break;
 	case 3:
 	    create_student(students, sindex);
-	    sindex++;
 	    break;
 	case 4:
-	    edit_student_grades(students, sindex);
+	    edit_student_grades(students, sindex, *cindex);
 	    break;
 	case 5:
-	    view_student_grades(students, sindex);
+	    view_student_grades(students, sindex, *cindex);
+        break;
+    case 6:
+        sort_student_grades(students, sindex, cindex);
+
 	}
     }
 }
