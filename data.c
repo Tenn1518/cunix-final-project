@@ -1,23 +1,7 @@
+#include "data.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-typedef struct teacher
-{
-    char *full_name;
-} Teacher;
-
-typedef struct course
-{
-    char* name;
-    unsigned int grade;
-} Course;
-
-typedef struct student
-{
-    Course* courses;
-    char* full_name;
-} Student;
 
 /* Creates menu from a list of possible choices the user can choose from as
  * strings.  Empty strings are skipped over, such as when you don't want a 0th

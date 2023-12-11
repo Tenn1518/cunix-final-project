@@ -1,6 +1,3 @@
-#define MAX 25
-#define STR_LENGTH 80
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,14 +10,14 @@
 void register_teacher(Teacher list[], int index);
 Teacher* login_as_teacher(Teacher list[], int index);
 void login_as_student(Student students[], int students_index);
-void teacher_menu(Teacher* teacher, Student students[], int *sindex);
+void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *courses[], int* cindex);
 
 int main(void)
 {
     Student students[MAX];
     Teacher teachers[MAX];
     char *courses[MAX];
-    int teachers_index = 0, students_index = 0;
+    int teachers_index = 0, students_index = 0, courses_index = 0;
     bool exit = false;
 
     srand(time(NULL));
@@ -58,7 +55,7 @@ int main(void)
 	    logged_in = login_as_teacher(teachers, teachers_index);
 	    if (logged_in != NULL)
 	    {
-		teacher_menu(logged_in, students, &students_index);
+		teacher_menu(logged_in, students, &students_index, courses, &courses_index);
 	    }
 	    break;
 	}
@@ -78,16 +75,9 @@ void register_teacher(Teacher list[], int index)
     fgets(name, STR_LENGTH, stdin);
 
     /* Strip newline from the end of the inputted name. */
-    for (int i = 0; i < STR_LENGTH; i++)
-    {
-        if (name[i] == '\n')
-        {
-            name[i] = '\0';
-        }
-    }
+    strip_newline(name);
 
     //Dynamically allocate memory space for the teacher name.
-    new_t.full_name = malloc(strlen(name) + 1);
     strcpy(new_t.full_name, name);
 
     /* Print confirmation of registration. */
@@ -98,7 +88,7 @@ void register_teacher(Teacher list[], int index)
     list[index] = new_t;
 }
 
-/* User will choose their teacher id. TODO */
+/* User will input their teacher ID to log-in. */
 Teacher* login_as_teacher(Teacher list[], int index)
 {
     unsigned int id = index;
@@ -131,7 +121,6 @@ Teacher* login_as_teacher(Teacher list[], int index)
     printf("Welcome, %s.\n", name);
 
     return logged_in;
-    /* teacher_menu(list, students, sindex); */
 }
 
 void login_as_student(Student students[], int students_index)
@@ -168,7 +157,7 @@ void login_as_student(Student students[], int students_index)
 }
 
 /* TODO: UNFINISHED */
-void teacher_menu(Teacher* teacher, Student students[], int* sindex)
+void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *courses[], int* cindex)
 {
     bool exit = false;
     int choice;
@@ -191,10 +180,10 @@ void teacher_menu(Teacher* teacher, Student students[], int* sindex)
 	    return;
 	    break;
 	case 1:
-	    /* TODO - Add courses */
+	    add_course(courses, MAX, cindex);
 	    break;
 	case 2:
-	    /* TODO - View courses  */
+	    view_courses(courses, MAX, *cindex);
 	    break;
 	case 3:
 	    create_student(students, sindex);

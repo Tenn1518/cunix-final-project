@@ -4,6 +4,8 @@
 #include "data.h"
 
 // Function declarations for teacher-related operations
+void add_course(char *courses[], int size, int* index);
+void view_courses(char *courses[], int size, int index);
 void create_student(Student students[], int* index);
 void edit_student_grades(Student students[], int* students_index);
 void view_student_grades(Student students[], int* students_index);

@@ -1,5 +1,9 @@
 #ifndef DATA_H_
 #define DATA_H_
+#define MAX_COURSES 8
+#define STR_LENGTH 80
+#define MAX 25
+#define STR_LENGTH 80
 
 #include <string.h>
 #include <stdlib.h>
@@ -10,19 +14,19 @@ void strip_newline(char *str);
 
 typedef struct teacher
 {
-    char *full_name;
+    char full_name[STR_LENGTH];
 } Teacher;
 
-typedef struct course
-{
-    char* name;
-    unsigned int grade;
-} Course;
+/* typedef struct course */
+/* { */
+/*     char* name; */
+/*     unsigned int grade; */
+/* } Course; */
 
 typedef struct student
 {
-    Course* courses;
-    char* full_name;
+    int course_grades[MAX_COURSES];
+    char full_name[STR_LENGTH];
 } Student;
 
 #endif // DATA_H_
