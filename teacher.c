@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "teacher.h"
 #include "data.h"
@@ -9,11 +10,8 @@
 #define STR_LENGTH 80
 #define MAX_COURSES 4
 
-
-
-
 // Creates a new student and assigns courses with grades to student *UNFINISHED*
-void create_student(Student students[], int sindex)
+void create_student(Student students[], int* sindex)
 {
     // Declare variables to grab names and grade from input
     char student_name[STR_LENGTH];
@@ -23,34 +21,26 @@ void create_student(Student students[], int sindex)
     printf("Enter the full name of the student: ");
     fgets(student_name, STR_LENGTH, stdin);
 
-    // Remove new line character from student name
-    // replace with terminating char
-    size_t len = strlen(student_name);
-    if (len > 0 && student_name[len - 1] == '\n')
-    {
-        student_name[len - 1] = '\0';
-    }
+    strip_newline(student_name);
 
     Student new_student;
     new_student.full_name = strdup(student_name);
 
-
-
     // Add new student to array of students
-    students[sindex] = new_student;
+    students[*sindex] = new_student;
 
     printf("New student %s, with id %d.\nStudent id must be given to the student.\n",student_name, sindex);
 }
 
 // Edit the grades for each course assigned to the student
 // *SUBJECT TO CHANGE*
-void edit_student_grades(Student students[], int students_index)
+void edit_student_grades(Student students[], int* students_index)
 {
     int student_id;
     printf("Enter the ID of the student to edit grades: ");
     scanf("%d", &student_id);
 
-    if (student_id < 0 || student_id >= students_index)
+    if (student_id < 0 || student_id >= *students_index)
     {
         printf("Invalid student ID.\n");
     }
@@ -72,13 +62,13 @@ void edit_student_grades(Student students[], int students_index)
 }
 
 // Displays the grade and name for each course assigned to the student
-void view_student_grades(Student students[], int students_index)
+void view_student_grades(Student students[], int* students_index)
 {
     int student_id;
     printf("Enter the ID of the student to view grades: ");
     scanf("%d", &student_id);
 
-    if (student_id < 0 || student_id >= students_index)
+    if (student_id < 0 || student_id >= *students_index)
     {
         printf("Invalid student ID.\n");
         return;
