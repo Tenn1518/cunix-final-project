@@ -86,7 +86,7 @@ void edit_student_grades(Student students[], int* sindex, int* cindex)
     Student *student = &students[student_id];
 
 
-    for (int i = 0; i < cindex; i++)
+    for (int i = 0; i < *cindex; i++)
     {
         printf("Enter new grade for Course %d: ", i + 1);
         scanf("%d", &student->course_grades[i]);
@@ -112,7 +112,7 @@ void view_student_grades(Student students[], int* sindex, int* cindex)
 
     printf("Grades for %s:\n", student->full_name);
 
-    for (int i = 0; i < cindex; i++)
+    for (int i = 0; i < *cindex; i++)
     {
         printf("%d, ",student->course_grades[i]);
     }

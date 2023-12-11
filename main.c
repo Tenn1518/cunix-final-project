@@ -191,11 +191,11 @@ void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *cours
 	    create_student(students, sindex);
 	    break;
 	case 4:
-	    edit_student_grades(students, sindex, *cindex);
+	    edit_student_grades(students, sindex, cindex);
 	    break;
 	case 5:
-	    view_student_grades(students, sindex, *cindex);
-        break;
+	    view_student_grades(students, sindex, cindex);
+	    break;
     case 6:
         sort_student_grades(students, sindex, cindex);
 
