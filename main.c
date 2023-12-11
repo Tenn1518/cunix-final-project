@@ -123,7 +123,7 @@ void register_teacher(Teacher list[], int index)
 /* User will choose their teacher id. TODO */
 void login_as_teacher(Teacher list[], int index)
 {
-    int id = -1;
+    unsigned int id = index;
     Teacher *logged_in;
     bool valid_id = false;
 
@@ -136,15 +136,15 @@ void login_as_teacher(Teacher list[], int index)
     while (!valid_id)
     {
 	printf("Enter teacher user ID: ");
-	scanf("%d", &id);
+	scanf("%u", &id);
 
-	if (id < 0 || id > index)
+	if (id < index)
 	{
-	    printf("Invalid id.\n");
+	    valid_id = true;
 	}
 	else
 	{
-	    valid_id = true;
+	    printf("Invalid id.\n");
 	}
     }
 
