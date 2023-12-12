@@ -55,7 +55,7 @@ int main(void)
 	    else
 	    {
 		student = login_as_student(students, students_index);
-		view_student_grades(student, courses, courses_index);	    
+		view_student_grades(student, courses, courses_index);
 	    }
 	    break;
 	case 3:
@@ -175,12 +175,14 @@ void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *cours
         "Create student",
         "Edit student grades",
         "View student grades",
-        "Sort student grades"
+        "Sort student grades",
+        "Calculate grade average",
+        "Search for student"
     };
 
     while(!exit)
     {
-	choice = select_item(menu_items, 7);
+	choice = select_item(menu_items, 9);
 	switch (choice)
 	{
 	case 0:
@@ -204,6 +206,13 @@ void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *cours
 	    break;
 	case 6:
 	    sort_student_grades(students, *sindex, courses, *cindex);
+        break;
+    case 7:
+        gradeAverage(students, *sindex, *cindex);
+        break;
+    case 8:
+        studentSearch(students, *sindex);
+        break;
 	}
     }
 }

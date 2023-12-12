@@ -13,6 +13,7 @@ void teacher_view_student_grades(Student students[], int students_index, char *c
 void sort_student_grades(Student students[], int sindex, char *courses[], int cindex);
 void gradeAverage(Student students[], int students_index, int course_index);
 int select_student(Student students[], int sindex);
+void studentSearch(Student students[], int sindex);
 
 // Other declarations related to teachers if needed
 

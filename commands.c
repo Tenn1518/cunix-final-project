@@ -147,7 +147,7 @@ void view_student_grades(Student student, char *courses[], int cindex)
         {
 	    printf("%-35s | %3d\n", courses[i], grade);
         }
-    }    
+    }
 }
 
 // Sorts student grades from highest to lowest grade value.
@@ -167,7 +167,7 @@ void sort_student_grades(Student students[], int sindex, char *courses[], int ci
 	printf("Error: Are you sure you've added courses and students yet?\n");
 	return;
     }
-    
+
     /* Get pointer to student selected by user. */
     student_id = select_student(students, sindex);
     Student student = students[student_id];
@@ -209,6 +209,7 @@ void gradeAverage(Student students[], int sindex, int cindex)
 {
     int student_id;
     double accum = 0;
+    int courseCount = 0;
     Student *student;
 
     printf("Enter the ID of the student to sort grades: ");
@@ -224,8 +225,44 @@ void gradeAverage(Student students[], int sindex, int cindex)
 
     for(int i = 0; i < cindex; i++)
     {
-        accum += student->course_grades[i];
+        // Calculate average for enrolled courses only
+        if(student->course_grades[i] > 0)
+        {
+            courseCount++;
+
+            accum += student->course_grades[i];
+        }
     }
 
-    printf("Average of student grades: %.2lf",(accum/(cindex)));
+    printf("Average of student grades: %.2lf",(accum/(courseCount)));
+}
+
+void studentSearch(Student students[], int sindex)
+{
+    char name[STR_LENGTH];
+    bool found = false;
+
+
+    printf("Enter the name of the student you wish to search for(Case sensitive): ");
+
+    fgets(name, STR_LENGTH, stdin);
+
+    strip_newline(name);
+
+    for(int i = 0; i < sindex; i++)
+    {
+        if(strcmp(name,students[i].full_name) == 0)
+        {
+            printf("Student, %s, found with ID: %d.\n", name,i);
+            found = true;
+            break;
+        }
+
+    }
+
+if(!found)
+{
+    printf("Student, %s, was not found.\n", name);
+}
+
 }
