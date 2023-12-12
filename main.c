@@ -9,7 +9,7 @@
 
 void register_teacher(Teacher list[], int index);
 Teacher* login_as_teacher(Teacher list[], int index);
-void login_as_student(Student students[], int students_index);
+Student login_as_student(Student students[], int students_index);
 void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *courses[], int* cindex);
 
 int main(void)
@@ -18,6 +18,7 @@ int main(void)
     Teacher teachers[MAX];
     char *courses[MAX];
     int teachers_index = 0, students_index = 0, courses_index = 0;
+    Student student;
     bool exit = false;
 
     srand(time(NULL));
@@ -25,9 +26,9 @@ int main(void)
     /* Main menu list of available options. */
     char *strs[] = {
 	"Exit",
-	"Register teacher account",
-	"Student login",
-	"Teacher login",
+	    "Register teacher account",
+	    "Student login",
+	    "Teacher login",
     };
     int choice;
 
@@ -47,8 +48,15 @@ int main(void)
 	    teachers_index++;
 	    break;
 	case 2:
-	    /* TODO */
-	    login_as_student(students, students_index);
+	    if (students_index == 0)
+	    {
+		printf("No students available. Please create a student first.\n\n");
+	    }
+	    else
+	    {
+		student = login_as_student(students, students_index);
+		view_student_grades(student, courses, courses_index);	    
+	    }
 	    break;
 	case 3:
 	    /* TODO */
@@ -124,39 +132,35 @@ Teacher* login_as_teacher(Teacher list[], int index)
     return logged_in;
 }
 
-void login_as_student(Student students[], int students_index)
+Student login_as_student(Student students[], int students_index)
 {
     int id = -1;
     Student *logged_in;
     bool valid_id = false;
 
-    if (students_index == 0)
-    {
-        printf("No students available. Please create a student first.\n\n");
-        return;
-    }
-
     while (!valid_id)
     {
-        printf("Enter student user ID: ");
-        scanf("%d", &id);
+	printf("Enter student user ID: ");
+	scanf("%d", &id);
 
-        if (id >= 0 && id < students_index)
-        {
-            valid_id = true;
-        }
-        else
-        {
-            printf("Invalid student ID.\n");
+	if (id >= 0 && id < students_index)
+	{
+	    valid_id = true;
+	}
+	else
+	{
+	    printf("Invalid student ID.\n");
 
 
-            while (getchar() != '\n');
-        }
+	    while (getchar() != '\n');
+	}
     }
 
     logged_in = &students[id];
     char *name = logged_in->full_name;
     printf("Welcome, %s.\n", name);
+
+    return *logged_in;
 }
 
 /* Looping menu displaying operations available to teacher accounts. */

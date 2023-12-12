@@ -118,6 +118,7 @@ void edit_student_grades(Student students[], int* sindex, char *courses[], int* 
 void teacher_view_student_grades(Student students[], int sindex, char *courses[], int cindex)
 {
     int student_id;
+    Student student;
 
     /* Validate courses and students exist first. */
     if (sindex == 0 || cindex == 0)
@@ -127,23 +128,21 @@ void teacher_view_student_grades(Student students[], int sindex, char *courses[]
     }
 
     student_id = select_student(students, sindex);
-    view_student_grades(students, student_id, courses, cindex);
+    student = students[student_id];
+
+    view_student_grades(student, courses, cindex);
 }
 
 /* Print out grades of student based on ID.  ID is expected to be within bounds
  * of students array. */
-void view_student_grades(Student students[], int student_id, char *courses[], int cindex)
+void view_student_grades(Student student, char *courses[], int cindex)
 {
-    const Student *student;
-
-    student = &students[student_id];
-
     printf("Grades for %s:\n"
-           "------------------------------------+----\n", student->full_name);
+           "------------------------------------+----\n", student.full_name);
 
     for (int i = 0; i < cindex; i++)
     {
-        int grade = student->course_grades[i];
+        int grade = student.course_grades[i];
         if (grade != -1)
         {
 	    printf("%-35s | %3d\n", courses[i], grade);
@@ -194,7 +193,7 @@ void sort_student_grades(Student students[], int sindex, char *courses[], int ci
 	}
     }
 
-    printf("Grades for %s sorted from highest to lowest:\n", student.full_name);
+    printf("\nGrades for %s sorted from highest to lowest:\n\n", student.full_name);
     for (int i = 0; i < cindex; i++)
     {
 	struct grade course = grades[i];
@@ -203,7 +202,6 @@ void sort_student_grades(Student students[], int sindex, char *courses[], int ci
 	    printf("%-35s | %3d\n", course.name, course.grade);
 	}
     }
-    printf("\n");
 }
 
 //Calculated the average of the students grades

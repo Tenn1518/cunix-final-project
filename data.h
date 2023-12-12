@@ -17,12 +17,6 @@ typedef struct teacher
     char full_name[STR_LENGTH];
 } Teacher;
 
-/* typedef struct course */
-/* { */
-/*     char* name; */
-/*     unsigned int grade; */
-/* } Course; */
-
 typedef struct student
 {
     int course_grades[MAX_COURSES];
