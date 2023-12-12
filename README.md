@@ -35,7 +35,7 @@ $ git clone https://github.com/Tenn1518/cunix-final-project.git
 
 $ cd cunix-final-project
 
-$ gcc -o main main.c data.c teacher.c
+$ gcc -o main main.c data.c commands.c
 
 $ ./main
 ```

@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "teacher.h"
+#include "commands.h"
 #include "data.h"
 
 void add_course(char *courses[], int size, int *index)

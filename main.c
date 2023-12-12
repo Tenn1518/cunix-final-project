@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 #include "data.h"
-#include "teacher.h"
+#include "commands.h"
 
 void register_teacher(Teacher list[], int index);
 Teacher* login_as_teacher(Teacher list[], int index);

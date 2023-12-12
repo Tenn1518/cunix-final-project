@@ -1,5 +1,5 @@
-#ifndef TEACHER_H
-#define TEACHER_H_
+#ifndef COMMANDS_H_
+#define COMMANDS_H_
 
 #include "data.h"
 
@@ -15,5 +15,5 @@ int select_student(Student students[], int sindex);
 
 // Other declarations related to teachers if needed
 
-#endif // TEACHER_H_
+#endif // COMMANDS_H_
 
