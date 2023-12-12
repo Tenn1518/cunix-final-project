@@ -184,7 +184,6 @@ void read_student_file(Student students[], int* index)
 
     if ((fptr = fopen(filename, "r")) == NULL)
     {
-	puts("File can't be opened.");
 	return;
     }
 
