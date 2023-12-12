@@ -7,15 +7,15 @@
 #include "data.h"
 #include "commands.h"
 
-void register_teacher(Teacher list[], int index);
-Teacher* login_as_teacher(Teacher list[], int index);
+void register_teacher(char *teachers[], int *index);
+char* login_as_teacher(char *teachers[], int index);
 Student login_as_student(Student students[], int students_index);
-void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *courses[], int* cindex);
+void teacher_menu(Student students[], int* sindex, char *courses[], int* cindex);
 
 int main(void)
 {
     Student students[MAX];
-    Teacher teachers[MAX];
+    char *teachers[MAX];
     char *courses[MAX];
     int teachers_index = 0, students_index = 0, courses_index = 0;
     Student student;
@@ -26,9 +26,9 @@ int main(void)
     /* Main menu list of available options. */
     char *strs[] = {
 	"Exit",
-	    "Register teacher account",
-	    "Student login",
-	    "Teacher login",
+	"Register teacher account",
+	"Student login",
+	"Teacher login",
     };
     int choice;
 
@@ -36,7 +36,7 @@ int main(void)
     while (!exit)
     {
 	choice = select_item(strs, 4);
-	Teacher* logged_in;
+	char* logged_in = NULL;
 
 	switch (choice)
 	{
@@ -44,8 +44,7 @@ int main(void)
 	    exit = true;
 	    return 0;
 	case 1:
-	    register_teacher(teachers, teachers_index);
-	    teachers_index++;
+	    register_teacher(teachers, &teachers_index);
 	    break;
 	case 2:
 	    if (students_index == 0)
@@ -63,19 +62,18 @@ int main(void)
 	    logged_in = login_as_teacher(teachers, teachers_index);
 	    if (logged_in != NULL)
 	    {
-		teacher_menu(logged_in, students, &students_index, courses, &courses_index);
+		teacher_menu(students, &students_index, courses, &courses_index);
 	    }
 	    break;
 	}
-    }
-    return 0;
+     }
+     return 0;
 }
 
 /* New user registers their full name. */
-void register_teacher(Teacher list[], int index)
+void register_teacher(char *teachers[], int *index)
 {
     char name[STR_LENGTH];
-    Teacher new_t;
 
     printf("Enter full name of the teacher [Max length: %d]: ", STR_LENGTH);
 
@@ -85,22 +83,22 @@ void register_teacher(Teacher list[], int index)
     /* Strip newline from the end of the inputted name. */
     strip_newline(name);
 
-    strcpy(new_t.full_name, name);
+    teachers[*index] = strdup(name);
 
     /* Print confirmation of registration. */
     printf("New teacher %s with id %d\n"
            "Please write down the id %d to log in in the future.\n\n",
-           new_t.full_name, index, index);
+           teachers[*index], *index, *index);
 
-    list[index] = new_t;
+    (*index)++;
 }
 
 /* User will input their teacher ID to log-in. */
-Teacher* login_as_teacher(Teacher list[], int index)
+char* login_as_teacher(char *teachers[], int index)
 {
     unsigned int id = index;
-    Teacher *logged_in;
     bool valid_id = false;
+    char *logged_in;
 
     printf("\n");
 
@@ -125,9 +123,8 @@ Teacher* login_as_teacher(Teacher list[], int index)
 	}
     }
 
-    logged_in = &list[id];
-    char* name = logged_in->full_name;
-    printf("Welcome, %s.\n", name);
+    logged_in = teachers[id];
+    printf("Welcome, %s.\n", logged_in);
 
     return logged_in;
 }
@@ -164,7 +161,7 @@ Student login_as_student(Student students[], int students_index)
 }
 
 /* Looping menu displaying operations available to teacher accounts. */
-void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *courses[], int* cindex)
+void teacher_menu(Student students[], int* sindex, char *courses[], int* cindex)
 {
     bool exit = false;
     int choice;

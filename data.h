@@ -12,11 +12,6 @@
 int select_item(char *choices[], int size);
 void strip_newline(char *str);
 
-typedef struct teacher
-{
-    char full_name[STR_LENGTH];
-} Teacher;
-
 typedef struct student
 {
     int course_grades[MAX_COURSES];
