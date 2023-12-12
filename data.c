@@ -187,13 +187,17 @@ void read_student_file(Student students[], int* index)
 	return;
     }
 
+    /* Each line corresponds to a student and their grades */
     while (fgets(line, sizeof(line), fptr) != NULL && line[0] != '\n')
     {
 	Student new_s;
 	char *token_ptr;
 	int i = 0;
+	/* Stores strings for each token.  First token is name, everything else
+	 * is a grade. */
 	char tokens[MAX][STR_LENGTH];
 
+	/* Break line apart into tokens and store them. */
 	token_ptr = strtok(line, "\t");
 	while (token_ptr != NULL)
 	{
@@ -202,8 +206,10 @@ void read_student_file(Student students[], int* index)
 	    i++;
 	}
 
+	/* First token is the student's name. */
 	strcpy(new_s.full_name, tokens[0]);
 
+	/* Each token after is a course grade. -1 means unenrolled. */
 	for (int i = 1; i < MAX; i++)
 	{
 	    int new_grade;
@@ -211,6 +217,8 @@ void read_student_file(Student students[], int* index)
 	    new_s.course_grades[i - 1] = new_grade;
 	}
 
+	/* Increment array index of students, which is a soft upper bound of
+	 * array. */
 	students[*index] = new_s;
 	(*index)++;
     }
