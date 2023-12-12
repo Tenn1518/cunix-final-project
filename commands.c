@@ -65,7 +65,7 @@ void create_student(Student students[], int* sindex)
     strcpy(new_student.full_name, student_name);
 
     // Initialize course grades as unenrolled for the new student
-    for (int i = 0; i < MAX_COURSES; i++)
+    for (int i = 0; i < MAX; i++)
     {
         new_student.course_grades[i] = -1;
     }

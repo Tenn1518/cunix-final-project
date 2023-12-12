@@ -71,3 +71,150 @@ void strip_newline(char *str)
 	str[len - 1] = '\0';
     }
 }
+
+/* Format of file:
+ * [student full name] [grade for course 1] [grade for course 2] ... [grade for course n] */
+void write_student_file(Student students[], int index)
+{
+    FILE *f_ptr;
+    const char *filename = STUDENTS_FILE_NAME;
+
+    if ((f_ptr = fopen(filename, "w")) == NULL)
+    {
+	puts("File can't be opened.");
+	return;
+    }
+
+    for (int i = 0; i < index; i++)
+    {
+	Student s = students[i];
+	char *name = s.full_name;
+
+	/* Write name as first column. */
+	fprintf(f_ptr, "%s", name);
+
+	for (int j = 0; j < MAX; j++)
+	{
+	    /* Write grades in continuing columns. */
+	    fprintf(f_ptr, "\t%d", s.course_grades[j]);
+	}
+
+	/* New row for next student. */
+	fprintf(f_ptr, "\n");
+    }
+
+    printf("Printed to file \"%s\".\n", filename);
+
+    fclose(f_ptr);
+}
+
+void write_teacher_file(char *teachers[], int index)
+{
+    FILE *fptr;
+    const char *filename = TEACHERS_FILE_NAME;
+
+    if ((fptr = fopen(filename, "w")) == NULL)
+    {
+	puts("File can't be opened.");
+	return;
+    }
+
+    for (int i = 0; i < index; i++)
+    {
+	fprintf(fptr, "%s\n", teachers[i]);
+    }
+
+    fclose(fptr);
+
+    printf("Printed to file \"%s\".\n", filename);
+}
+
+void write_courses_file(char *courses[], int index)
+{
+    FILE *fptr;
+    const char *filename = COURSES_FILE_NAME;
+
+    if ((fptr = fopen(filename, "w")) == NULL)
+    {
+	puts("File can't be opened.");
+	return;
+    }
+
+    for (int i = 0; i < index; i++)
+    {
+	fprintf(fptr, "%s\n", courses[i]);
+    }
+
+    fclose(fptr);
+    printf("Printed to file \"%s\".\n", filename);
+}
+
+/* Populate list of names into array. */
+void read_list_file(char *filename, char *names[], int *index)
+{
+    FILE *fptr;
+    char line[STR_LENGTH];
+
+    *index = 0;
+
+    if ((fptr = fopen(filename, "r")) == NULL)
+    {
+	return;
+    }
+
+    for (int i = 0; fgets(line, sizeof(line), fptr) != NULL && line[0] != '\n'; i++)
+    {
+	strip_newline(line);
+	names[i] = strdup(line);
+	(*index)++;
+    }
+
+    fclose(fptr);
+}
+
+/* Read from file into students array.  Index counts how many students are
+ * present in the array. */
+void read_student_file(Student students[], int* index)
+{
+    FILE *fptr;
+    const char *filename = STUDENTS_FILE_NAME;
+    char line[400];
+
+    *index = 0;
+
+    if ((fptr = fopen(filename, "r")) == NULL)
+    {
+	puts("File can't be opened.");
+	return;
+    }
+
+    while (fgets(line, sizeof(line), fptr) != NULL && line[0] != '\n')
+    {
+	Student new_s;
+	char *token_ptr;
+	int i = 0;
+	char tokens[MAX][STR_LENGTH];
+
+	token_ptr = strtok(line, "\t");
+	while (token_ptr != NULL)
+	{
+	    strcpy(tokens[i], token_ptr);
+	    token_ptr = strtok(NULL, "\t");
+	    i++;
+	}
+
+	strcpy(new_s.full_name, tokens[0]);
+
+	for (int i = 1; i < MAX; i++)
+	{
+	    int new_grade;
+	    sscanf(tokens[i], "%d", &new_grade);
+	    new_s.course_grades[i - 1] = new_grade;
+	}
+
+	students[*index] = new_s;
+	(*index)++;
+    }
+
+    fclose(fptr);
+}

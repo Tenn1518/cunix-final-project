@@ -21,6 +21,11 @@ int main(void)
     Student student;
     bool exit = false;
 
+    /* Populate data from files on startup. */
+    read_list_file(TEACHERS_FILE_NAME, teachers, &teachers_index);
+    read_list_file(COURSES_FILE_NAME, courses, &courses_index);
+    read_student_file(students, &students_index);
+
     srand(time(NULL));
 
     /* Main menu list of available options. */
@@ -42,7 +47,7 @@ int main(void)
 	{
 	case 0:
 	    exit = true;
-	    return 0;
+	    break;
 	case 1:
 	    register_teacher(teachers, &teachers_index);
 	    break;
@@ -66,8 +71,14 @@ int main(void)
 	    }
 	    break;
 	}
-     }
-     return 0;
+    }
+
+    printf("Saving data to %s, %s, and %s.\n", STUDENTS_FILE_NAME, TEACHERS_FILE_NAME, COURSES_FILE_NAME);
+    write_teacher_file(teachers, teachers_index);
+    write_student_file(students, students_index);
+    write_courses_file(courses, courses_index);
+
+    return 0;
 }
 
 /* New user registers their full name. */
