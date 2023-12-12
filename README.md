@@ -5,6 +5,12 @@ Result Management System
 teachers to login to upload and manage student’s marks and permits students to view
 their individual marks only.
 
+**Usage:** Only teachers can register their accounts.  They can add course names
+and create student accounts.  The expectation is that teachers will create
+student accounts for each student, and then give the ID to the students for them
+to login.  Students are only able to view their grades, which will be printed as
+output on login.
+
 ### Specifications:
 - Roles:
   - Teacher: Allowed to upload, view, edit, and manage student marks.
