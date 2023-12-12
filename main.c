@@ -17,6 +17,7 @@ int main(void)
     Student students[MAX];
     char *teachers[MAX];
     char *courses[MAX];
+    /* Upper bound of arrays that has been written to. */
     int teachers_index = 0, students_index = 0, courses_index = 0;
     Student student;
     bool exit = false;
@@ -46,24 +47,28 @@ int main(void)
 	switch (choice)
 	{
 	case 0:
+	    /* Exit loop and save */
 	    exit = true;
 	    break;
 	case 1:
+	    /* Create teacher first. */
 	    register_teacher(teachers, &teachers_index);
 	    break;
 	case 2:
+	    /* Students need to be created by a teacher first. */
 	    if (students_index == 0)
 	    {
 		printf("No students available. Please create a student first.\n\n");
 	    }
 	    else
 	    {
+		/* Students can only view grades as set by teachers on login. */
 		student = login_as_student(students, students_index);
 		view_student_grades(student, courses, courses_index);
 	    }
 	    break;
 	case 3:
-	    /* TODO */
+	    /* Teacher operations available once logged in. */
 	    logged_in = login_as_teacher(teachers, teachers_index);
 	    if (logged_in != NULL)
 	    {
@@ -73,6 +78,7 @@ int main(void)
 	}
     }
 
+    /* On exit, all data is saved to files. */
     printf("Saving data to %s, %s, and %s.\n", STUDENTS_FILE_NAME, TEACHERS_FILE_NAME, COURSES_FILE_NAME);
     write_teacher_file(teachers, teachers_index);
     write_student_file(students, students_index);
@@ -94,6 +100,7 @@ void register_teacher(char *teachers[], int *index)
     /* Strip newline from the end of the inputted name. */
     strip_newline(name);
 
+    /* Save new teacher to array. */
     teachers[*index] = strdup(name);
 
     /* Print confirmation of registration. */
@@ -104,7 +111,7 @@ void register_teacher(char *teachers[], int *index)
     (*index)++;
 }
 
-/* User will input their teacher ID to log-in. */
+/* User will input their teacher ID to log-in.  Name is returned. */
 char* login_as_teacher(char *teachers[], int index)
 {
     unsigned int id = index;
@@ -140,6 +147,7 @@ char* login_as_teacher(char *teachers[], int index)
     return logged_in;
 }
 
+/* Returns the student corresponding to the ID the user inputs. */
 Student login_as_student(Student students[], int students_index)
 {
     int id = -1;

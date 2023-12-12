@@ -7,6 +7,7 @@
 #include "commands.h"
 #include "data.h"
 
+/* Adds a name for subsequent courses */
 void add_course(char *courses[], int size, int *index)
 {
     char name[COURSE_STR_LENGTH];
@@ -194,6 +195,7 @@ void sort_student_grades(Student students[], int sindex, char *courses[], int ci
 	}
     }
 
+    // Print out new sorted list from high to low
     printf("\nGrades for %s sorted from highest to lowest:\n\n", student.full_name);
     for (int i = 0; i < cindex; i++)
     {
@@ -206,7 +208,7 @@ void sort_student_grades(Student students[], int sindex, char *courses[], int ci
     }
 }
 
-//Calculated the average of the students grades
+// Calculated the average of the students grades
 void gradeAverage(Student students[], int sindex, int cindex)
 {
     int student_id;
@@ -214,18 +216,12 @@ void gradeAverage(Student students[], int sindex, int cindex)
     int courseCount = 0;
     Student *student;
 
-    printf("Enter the ID of the student to sort grades: ");
-    scanf("%d", &student_id);
-
-    if (student_id >= sindex)
-    {
-        printf("Invalid student ID.\n");
-        return;
-    }
-
+    /* Get id from user */
+    student_id = select_student(students, sindex);
     student = &students[student_id];
 
-    for(int i = 0; i < cindex; i++)
+    /* Sum the grades and divide by number of courses. */
+    for (int i = 0; i < cindex; i++)
     {
         // Calculate average for enrolled courses only
         if(student->course_grades[i] > 0)
@@ -241,11 +237,11 @@ void gradeAverage(Student students[], int sindex, int cindex)
     printf("Average of student grades: %.2lf",(accum/(courseCount)));
 }
 
+/* String matches a name in students */
 void studentSearch(Student students[], int sindex)
 {
     char name[STR_LENGTH];
     bool found = false;
-
 
     printf("Enter the name of the student you wish to search for(Case sensitive): ");
 
@@ -265,9 +261,9 @@ void studentSearch(Student students[], int sindex)
 
     }
 
-if(!found)
-{
-    printf("Student, %s, was not found.\n", name);
-}
+    if(!found)
+    {
+	printf("Student, %s, was not found.\n", name);
+    }
 
 }
