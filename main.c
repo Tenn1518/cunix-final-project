@@ -69,7 +69,7 @@ void register_teacher(Teacher list[], int index)
     char name[STR_LENGTH];
     Teacher new_t;
 
-    printf("Enter full name of the teacher [Max length: %d]: ", MAX);
+    printf("Enter full name of the teacher [Max length: %d]: ", STR_LENGTH);
 
     /* Use fgets so the user can input space-separated full name. */
     fgets(name, STR_LENGTH, stdin);
@@ -93,6 +93,8 @@ Teacher* login_as_teacher(Teacher list[], int index)
     unsigned int id = index;
     Teacher *logged_in;
     bool valid_id = false;
+
+    printf("\n");
 
     if (index == 0)
     {
@@ -157,7 +159,7 @@ void login_as_student(Student students[], int students_index)
     printf("Welcome, %s.\n", name);
 }
 
-/* TODO: UNFINISHED */
+/* Looping menu displaying operations available to teacher accounts. */
 void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *courses[], int* cindex)
 {
     bool exit = false;
@@ -191,14 +193,13 @@ void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *cours
 	    create_student(students, sindex);
 	    break;
 	case 4:
-	    edit_student_grades(students, sindex, cindex);
+	    edit_student_grades(students, sindex, courses, cindex);
 	    break;
 	case 5:
-	    view_student_grades(students, sindex, cindex);
+	    view_student_grades(students, *sindex, courses, *cindex);
 	    break;
-    case 6:
-        sort_student_grades(students, sindex, cindex);
-
+	case 6:
+	    sort_student_grades(students, *sindex, courses, *cindex);
 	}
     }
 }

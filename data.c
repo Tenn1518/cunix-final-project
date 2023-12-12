@@ -10,6 +10,8 @@ int select_item(char *menu_items[], int size)
 {
     int input = -1;
 
+    printf("\n");
+
     /* Print each menu item */
     for (int i = 0; i < size; i++)
     {

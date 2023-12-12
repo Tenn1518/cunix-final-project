@@ -7,11 +7,9 @@
 #include "teacher.h"
 #include "data.h"
 
-/* #define MAX_COURSES 4 */
-
 void add_course(char *courses[], int size, int *index)
 {
-    char name[STR_LENGTH];
+    char name[COURSE_STR_LENGTH];
 
     if (size == *index)
     {
@@ -20,10 +18,10 @@ void add_course(char *courses[], int size, int *index)
     }
 
     printf("Enter name of new course: ");
-    fgets(name, STR_LENGTH, stdin);
+    fgets(name, COURSE_STR_LENGTH, stdin);
     strip_newline(name);
 
-    printf("Course no. %d (%s) added.\n", *index, name);
+    printf("Course no. %d (%s) added.\n", *index + 1, name);
 
     courses[*index] = strdup(name);
     (*index)++;
@@ -31,13 +29,18 @@ void add_course(char *courses[], int size, int *index)
 
 void view_courses(char *courses[], int size, int index)
 {
+    if (index == 0)
+    {
+	printf("Add courses first!\n");
+	return;
+    }
+
     printf("Courses offered:\n"
 	   "----------------\n");
     for (int i = 0; i < index && i < size; i++)
     {
 	printf("%d) %s\n", i + 1, courses[i]);
     }
-    printf("\n\n");
 }
 
 // Creates a new student and assigns courses with grades to student *UNFINISHED*
@@ -67,111 +70,157 @@ void create_student(Student students[], int* sindex)
     (*sindex)++;
 }
 
-
-
 // Edit the grades for each course assigned to the student
 // *SUBJECT TO CHANGE*
-void edit_student_grades(Student students[], int* sindex, int* cindex)
+void edit_student_grades(Student students[], int* sindex, char *courses[], int* cindex)
 {
     int student_id;
-    printf("Enter the ID of the student to edit grades: ");
-    scanf("%d", &student_id);
+    Student *student;
 
-    if (student_id < 0 || student_id >= *sindex)
-    {
-        printf("Invalid student ID.\n");
-        return;
-    }
-
-    Student *student = &students[student_id];
-
+    student_id = select_student(students, *sindex);
+    student = &students[student_id];
 
     for (int i = 0; i < *cindex; i++)
     {
-        printf("Enter new grade for Course %d: ", i + 1);
-        scanf("%d", &student->course_grades[i]);
+	char *course_name = courses[i];
+	int new_grade;
+
+	/* Only valid inputs are between [-1, 100]. */
+	printf("Acceptable values for course grade input:\n"
+	       "-1: Student unenrolled in course\n"
+	       "0-100: Current grade of student\n");
+	do
+	{
+	    printf("Enter new grade for Course %d (%s), or -1 to unenroll: ", i + 1, course_name);
+	    scanf("%d", &new_grade);
+	} while (new_grade < -1 || new_grade > 100);
+	student->course_grades[i] = new_grade;
     }
 
     printf("Grades for %s edited successfully.\n", student->full_name);
 }
 
-// Displays the grade and name for each course assigned to the student
-void view_student_grades(Student students[], int* sindex, int* cindex)
+/* Displays the grade and name for each course assigned to the student.
+ * Parameters are copied by value as viewing is non-destructive. */
+void view_student_grades(Student students[], int sindex, char *courses[], int cindex)
 {
     int student_id;
-    printf("Enter the ID of the student to view grades: ");
-    scanf("%d", &student_id);
+    const Student *student;
 
-    if (student_id < 0 || student_id >= *sindex)
+    student_id = select_student(students, sindex);
+    student = &students[student_id];
+
+    printf("Grades for %s:\n"
+           "-------------------------------------+---\n", student->full_name);
+
+    for (int i = 0; i < cindex; i++)
     {
-        printf("Invalid student ID.\n");
-        return;
-    }
-
-    Student *student = &students[student_id];
-
-    printf("Grades for %s:\n", student->full_name);
-
-    for (int i = 0; i < *cindex; i++)
-    {
-        printf("%d, ",student->course_grades[i]);
-    }
-}
-// Sorts student grades from highest to lowest grade value.
-void sort_student_grades(Student students[], int* sindex, int* cindex)
-{
-    int student_id;
-    printf("Enter the ID of the student to sort grades: ");
-    scanf("%d", &student_id);
-
-    if (student_id >= *sindex)
-    {
-        printf("Invalid student ID.\n");
-        return;
-    }
-
-    Student *student = &students[student_id];
-
-    // Bubble Sort algorithm, sorts from highest to lowest
-    for (int i = 0; i < *cindex - 1; i++)
-    {
-        for (int j = 0; j < *cindex - i - 1; j++)
+        int grade = student->course_grades[i];
+        if (grade != -1)
         {
-            if (student->course_grades[j] < student->course_grades[j + 1])
-            {
-                int temp = student->course_grades[j];
-                student->course_grades[j] = student->course_grades[j + 1];
-                student->course_grades[j + 1] = temp;
-            }
+	    printf("%-35s | %3d\n", courses[i], grade);
         }
     }
+}
 
-    printf("Grades for %s sorted from highest to lowest.\n", student->full_name);
+// Sorts student grades from highest to lowest grade value.
+void sort_student_grades(Student students[], int sindex, char *courses[], int cindex)
+{
+    int student_id;
+    struct grade
+    {
+        char *name;
+	int grade;
+    };
+    struct grade grades[cindex];
+
+    /* Get pointer to student selected by user. */
+    student_id = select_student(students, sindex);
+    Student student = students[student_id];
+
+    /* Group course name and student's grade for sorting and displaying */
+    for (int i = 0; i < cindex; i++)
+    {
+	struct grade grade = {courses[i], student.course_grades[i]};
+	grades[i] = grade;
+    }
+
+    // Bubble Sort algorithm, sorts from highest to lowest
+    for (int i = 0; i < cindex - 1; i++)
+    {
+	for (int j = 0; j < cindex - i - 1; j++)
+	{
+	    if (grades[j].grade < grades[j + 1].grade)
+	    {
+		struct grade temp = grades[j];
+		grades[j] = grades[j + 1];
+		grades[j + 1] = temp;
+	    }
+	}
+    }
+
+    printf("Grades for %s sorted from highest to lowest:\n", student.full_name);
+    for (int i = 0; i < cindex; i++)
+    {
+	struct grade course = grades[i];
+	if (course.grade != -1)
+	{
+	    printf("%-35s | %3d\n", course.name, course.grade);
+	}
+    }
+    printf("\n");
+}
+
+/* Return ID of student selected by teacher. */
+int select_student(Student students[], int sindex)
+{
+    unsigned int id;
+    Student *student = NULL;
+
+    for (int i = 0; i < sindex; i++)
+    {
+	char *name = students[i].full_name;
+	printf("%d) %s\n", i, name);
+    }
+
+    printf("\nEnter the ID of the student: ");
+    do
+    {
+	scanf("%d", &id);
+	
+	if (id > sindex)
+	{
+	    printf("Invalid student ID.\n"
+		   "Enter the ID of the student:");
+	}
+    } while (id > sindex);
+    
+    return id;
 }
 
 //**UNFINISHED**//
 //Calculated the average of the students grades
-void gradeAverage(Student students[], int* sindex, int* cindex)
+void gradeAverage(Student students[], int sindex, int cindex)
 {
     int student_id;
     double accum = 0;
+    Student *student;
+
     printf("Enter the ID of the student to sort grades: ");
     scanf("%d", &student_id);
 
-    if (student_id >= *sindex)
+    if (student_id >= sindex)
     {
         printf("Invalid student ID.\n");
         return;
     }
 
-    Student *student = &students[student_id];
+    student = &students[student_id];
 
-
-    for(int i = 0; i < *cindex; i++)
+    for(int i = 0; i < cindex; i++)
     {
         accum += student->course_grades[i];
-
     }
 
-    printf("Average of student grades: %.2lf",(accum/(*cindex)));
+    printf("Average of student grades: %.2lf",(accum/(cindex)));
 }

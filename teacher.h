@@ -7,11 +7,11 @@
 void add_course(char *courses[], int size, int* index);
 void view_courses(char *courses[], int size, int index);
 void create_student(Student students[], int* index);
-void edit_student_grades(Student students[], int* students_index, int* course_index);
-void view_student_grades(Student students[], int* students_index, int* course_index);
-void sort_student_grades(Student students[], int* students_index, int* course_index);
-void gradeAverage(Student students[], int* students_index, int* course_index);
-
+void edit_student_grades(Student students[], int* students_index, char *courses[], int* course_index);
+void view_student_grades(Student students[], int students_index, char *courses[], int course_index);
+void sort_student_grades(Student students[], int sindex, char *courses[], int cindex);
+void gradeAverage(Student students[], int students_index, int course_index);
+int select_student(Student students[], int sindex);
 
 // Other declarations related to teachers if needed
 

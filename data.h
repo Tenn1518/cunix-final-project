@@ -1,9 +1,9 @@
 #ifndef DATA_H_
 #define DATA_H_
 #define MAX_COURSES 8
-#define STR_LENGTH 80
 #define MAX 25
 #define STR_LENGTH 80
+#define COURSE_STR_LENGTH 35
 
 #include <string.h>
 #include <stdlib.h>
