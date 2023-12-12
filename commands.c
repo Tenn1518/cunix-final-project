@@ -186,6 +186,7 @@ void sort_student_grades(Student students[], int sindex, char *courses[], int ci
 	{
 	    if (grades[j].grade < grades[j + 1].grade)
 	    {
+    // Swap grades when higher value grade is encountered
 		struct grade temp = grades[j];
 		grades[j] = grades[j + 1];
 		grades[j + 1] = temp;
@@ -197,6 +198,7 @@ void sort_student_grades(Student students[], int sindex, char *courses[], int ci
     for (int i = 0; i < cindex; i++)
     {
 	struct grade course = grades[i];
+	// Print grades for enrolled courses
 	if (course.grade != -1)
 	{
 	    printf("%-35s | %3d\n", course.name, course.grade);
@@ -228,8 +230,10 @@ void gradeAverage(Student students[], int sindex, int cindex)
         // Calculate average for enrolled courses only
         if(student->course_grades[i] > 0)
         {
+            //Increment counter for enrolled courses
             courseCount++;
 
+            // accumulate all grades
             accum += student->course_grades[i];
         }
     }
@@ -251,6 +255,7 @@ void studentSearch(Student students[], int sindex)
 
     for(int i = 0; i < sindex; i++)
     {
+        // Compare input string to student name
         if(strcmp(name,students[i].full_name) == 0)
         {
             printf("Student, %s, found with ID: %d.\n", name,i);
