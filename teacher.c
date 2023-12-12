@@ -31,7 +31,7 @@ void view_courses(char *courses[], int size, int index)
 {
     if (index == 0)
     {
-	printf("Add courses first!\n");
+	printf("Error: Add courses first!\n");
 	return;
     }
 
@@ -43,24 +43,31 @@ void view_courses(char *courses[], int size, int index)
     }
 }
 
-// Creates a new student and assigns courses with grades to student *UNFINISHED*
+// Creates a new student and assigns courses with grades to student
 void create_student(Student students[], int* sindex)
 {
     // Declare variables to grab names and grade from input
     char student_name[STR_LENGTH];
+    Student new_student;
+
+    /* Size validation. */
+    if (*sindex >= MAX)
+    {
+	printf("Error: Reached limit of maximum number of students (%d).\n", MAX);
+	return;
+    }
 
     printf("Enter the full name of the student: ");
     fgets(student_name, STR_LENGTH, stdin);
 
     strip_newline(student_name);
 
-    Student new_student;
     strcpy(new_student.full_name, student_name);
 
-    // Initialize course grades for the new student
+    // Initialize course grades as unenrolled for the new student
     for (int i = 0; i < MAX_COURSES; i++)
     {
-        new_student.course_grades[i] = 0;
+        new_student.course_grades[i] = -1;
     }
 
     // Add new student to array of students
@@ -71,11 +78,17 @@ void create_student(Student students[], int* sindex)
 }
 
 // Edit the grades for each course assigned to the student
-// *SUBJECT TO CHANGE*
 void edit_student_grades(Student students[], int* sindex, char *courses[], int* cindex)
 {
     int student_id;
     Student *student;
+
+    /* Validate students and courses exist first. */
+    if (*sindex == 0 || cindex == 0)
+    {
+        printf("Error: Are you sure you've added courses and students yet?\n");
+	return;
+    }
 
     student_id = select_student(students, *sindex);
     student = &students[student_id];
@@ -107,6 +120,13 @@ void view_student_grades(Student students[], int sindex, char *courses[], int ci
     int student_id;
     const Student *student;
 
+    /* Validate courses and students exist first. */
+    if (sindex == 0 || cindex == 0)
+    {
+	printf("Error: Are you sure you've added courses and students yet?\n");
+	return;
+    }
+    
     student_id = select_student(students, sindex);
     student = &students[student_id];
 
@@ -134,6 +154,13 @@ void sort_student_grades(Student students[], int sindex, char *courses[], int ci
     };
     struct grade grades[cindex];
 
+    /* Size validation */
+    if (sindex == 0 || cindex == 0)
+    {
+	printf("Error: Are you sure you've added courses and students yet?\n");
+	return;
+    }
+    
     /* Get pointer to student selected by user. */
     student_id = select_student(students, sindex);
     Student student = students[student_id];
