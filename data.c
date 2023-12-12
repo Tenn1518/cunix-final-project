@@ -34,6 +34,33 @@ int select_item(char *menu_items[], int size)
     return input;
 }
 
+/* Return ID of student selected by teacher. */
+int select_student(Student students[], int sindex)
+{
+    unsigned int id;
+    Student *student = NULL;
+
+    for (int i = 0; i < sindex; i++)
+    {
+	char *name = students[i].full_name;
+	printf("%d) %s\n", i, name);
+    }
+
+    printf("\nEnter the ID of the student: ");
+    do
+    {
+	scanf("%d", &id);
+	
+	if (id > sindex)
+	{
+	    printf("Invalid student ID.\n"
+		   "Enter the ID of the student:");
+	}
+    } while (id > sindex);
+    
+    return id;
+}
+
 void strip_newline(char *str)
 {
     // Remove new line character from student name
