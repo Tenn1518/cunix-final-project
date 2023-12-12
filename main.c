@@ -196,7 +196,7 @@ void teacher_menu(Teacher* teacher, Student students[], int* sindex, char *cours
 	    edit_student_grades(students, sindex, courses, cindex);
 	    break;
 	case 5:
-	    view_student_grades(students, *sindex, courses, *cindex);
+	    teacher_view_student_grades(students, *sindex, courses, *cindex);
 	    break;
 	case 6:
 	    sort_student_grades(students, *sindex, courses, *cindex);

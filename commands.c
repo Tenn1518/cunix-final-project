@@ -115,10 +115,9 @@ void edit_student_grades(Student students[], int* sindex, char *courses[], int* 
 
 /* Displays the grade and name for each course assigned to the student.
  * Parameters are copied by value as viewing is non-destructive. */
-void view_student_grades(Student students[], int sindex, char *courses[], int cindex)
+void teacher_view_student_grades(Student students[], int sindex, char *courses[], int cindex)
 {
     int student_id;
-    const Student *student;
 
     /* Validate courses and students exist first. */
     if (sindex == 0 || cindex == 0)
@@ -126,12 +125,21 @@ void view_student_grades(Student students[], int sindex, char *courses[], int ci
 	printf("Error: Are you sure you've added courses and students yet?\n");
 	return;
     }
-    
+
     student_id = select_student(students, sindex);
+    view_student_grades(students, student_id, courses, cindex);
+}
+
+/* Print out grades of student based on ID.  ID is expected to be within bounds
+ * of students array. */
+void view_student_grades(Student students[], int student_id, char *courses[], int cindex)
+{
+    const Student *student;
+
     student = &students[student_id];
 
     printf("Grades for %s:\n"
-           "-------------------------------------+---\n", student->full_name);
+           "------------------------------------+----\n", student->full_name);
 
     for (int i = 0; i < cindex; i++)
     {
@@ -140,7 +148,7 @@ void view_student_grades(Student students[], int sindex, char *courses[], int ci
         {
 	    printf("%-35s | %3d\n", courses[i], grade);
         }
-    }
+    }    
 }
 
 // Sorts student grades from highest to lowest grade value.
@@ -198,7 +206,6 @@ void sort_student_grades(Student students[], int sindex, char *courses[], int ci
     printf("\n");
 }
 
-//**UNFINISHED**//
 //Calculated the average of the students grades
 void gradeAverage(Student students[], int sindex, int cindex)
 {
